@@ -26,7 +26,7 @@ export function LayersPanel({ layers, onToggleVisibility, onSelect }: LayersPane
                 <button
                   type="button"
                   onClick={() => onSelect(layer.id)}
-                  className={`flex w-full items-center gap-2 border-b border-line px-2.5 py-2 text-left transition-colors ${
+                  className={`flex min-h-12 w-full items-center gap-2 border-b border-line px-2.5 text-left transition-colors ${
                     layer.isActive ? 'bg-accent-soft' : 'hover:bg-surface-2'
                   }`}
                 >
@@ -44,13 +44,13 @@ export function LayersPanel({ layers, onToggleVisibility, onSelect }: LayersPane
                         onToggleVisibility(layer.id);
                       }
                     }}
-                    className="rounded p-0.5 text-ink-muted transition-colors hover:bg-surface-3 hover:text-ink-base"
+                    className="flex h-11 w-11 items-center justify-center rounded text-ink-muted transition-colors hover:bg-surface-3 hover:text-ink-base active:bg-surface-3"
                     aria-label={layer.visible ? 'Hide layer' : 'Show layer'}
                     aria-pressed={layer.visible}
                   >
                     <ToolIcon
                       iconId={layer.visible ? 'ui-eye-open' : 'ui-eye-closed'}
-                      className="h-4 w-4"
+                      className="h-5 w-5"
                     />
                   </span>
                   <span className="min-w-0 flex-1">

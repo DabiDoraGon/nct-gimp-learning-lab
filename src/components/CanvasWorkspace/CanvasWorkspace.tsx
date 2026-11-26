@@ -132,21 +132,21 @@ export function CanvasWorkspace({
           {image ? `${image.fileName} — ${image.width} × ${image.height} px` : 'No image open'}
         </span>
         <span className="hidden shrink-0 sm:inline">{toolName}</span>
-        <div className="flex shrink-0 items-center gap-1">
+        <div className="flex shrink-0 items-center gap-0.5">
           <button
             type="button"
             onClick={() => setZoomClamped(displayedZoom / ZOOM_STEP)}
             disabled={!image}
-            className="rounded p-1 text-ink-base transition-colors hover:bg-surface-3 disabled:opacity-40"
+            className="flex h-11 w-11 items-center justify-center rounded text-ink-base transition-colors hover:bg-surface-3 disabled:opacity-40"
             aria-label="Zoom out"
           >
-            <ToolIcon iconId="ui-minus" className="h-4 w-4" />
+            <ToolIcon iconId="ui-minus" className="h-5 w-5" />
           </button>
           <button
             type="button"
             onClick={() => setZoomClamped(1)}
             disabled={!image}
-            className="min-w-12 rounded px-1 py-0.5 text-center tabular-nums text-ink-base transition-colors hover:bg-surface-3 disabled:opacity-40"
+            className="flex h-11 min-w-12 items-center justify-center rounded px-1 tabular-nums text-ink-base transition-colors hover:bg-surface-3 disabled:opacity-40"
             aria-label="Reset zoom to 100%"
             title="Reset zoom"
           >
@@ -156,10 +156,10 @@ export function CanvasWorkspace({
             type="button"
             onClick={() => setZoomClamped(displayedZoom * ZOOM_STEP)}
             disabled={!image}
-            className="rounded p-1 text-ink-base transition-colors hover:bg-surface-3 disabled:opacity-40"
+            className="flex h-11 w-11 items-center justify-center rounded text-ink-base transition-colors hover:bg-surface-3 disabled:opacity-40"
             aria-label="Zoom in"
           >
-            <ToolIcon iconId="ui-plus" className="h-4 w-4" />
+            <ToolIcon iconId="ui-plus" className="h-5 w-5" />
           </button>
         </div>
       </div>

@@ -4,6 +4,7 @@ import { Toolbox } from '@/components/Toolbox/Toolbox';
 import { CanvasWorkspace } from '@/components/CanvasWorkspace/CanvasWorkspace';
 import { ToolOptions } from '@/components/ToolOptions/ToolOptions';
 import { LayersPanel } from '@/components/LayersPanel/LayersPanel';
+import { MobileSheet } from '@/components/shared/MobileSheet';
 import { ToolIcon } from '@/components/shared/ToolIcon';
 import { useTheme } from '@/hooks/useTheme';
 import { useWorkspace } from '@/hooks/useWorkspace';
@@ -83,7 +84,7 @@ export default function App() {
 
       {/* Mobile bottom action bar */}
       {!isDesktop && (
-        <nav className="flex items-stretch border-t border-line bg-surface-1">
+        <nav className="safe-nav flex items-stretch border-t border-line bg-surface-1">
           {(
             [
               ['toolbox', 'ui-menu', 'Tools'],
@@ -95,7 +96,7 @@ export default function App() {
               key={id}
               type="button"
               onClick={() => toggleSheet(id)}
-              className={`flex flex-1 flex-col items-center gap-0.5 py-2 text-[10px] transition-colors ${
+              className={`flex flex-1 flex-col items-center justify-center gap-0.5 py-2.5 text-[11px] transition-colors ${
                 sheet === id ? 'bg-surface-3 text-ink-base' : 'text-ink-muted hover:bg-surface-2'
               }`}
               aria-expanded={sheet === id}
@@ -109,34 +110,28 @@ export default function App() {
 
       {/* Mobile sliding sheet */}
       {!isDesktop && sheet && (
-        <div className="relative z-40 border-t border-line gimp-panel shadow-[0_-8px_24px_rgba(0,0,0,0.35)]">
-          <div className="flex items-center justify-between border-b border-line px-3 py-1.5">
-            <span className="text-xs font-medium text-ink-base">
-              {sheet === 'toolbox' ? 'Toolbox' : sheet === 'options' ? 'Tool Options' : 'Layers'}
-            </span>
-            <button
-              type="button"
-              onClick={() => setSheet(null)}
-              className="rounded p-1.5 text-ink-muted transition-colors hover:bg-surface-3 hover:text-ink-base"
-              aria-label="Close panel"
-            >
-              <ToolIcon iconId="ui-close" className="h-4 w-4" />
-            </button>
-          </div>
-          <div className="max-h-[45vh] overflow-y-auto">
-            {sheet === 'toolbox' && (
-              <Toolbox layout="sheet" activeTool={activeTool} onSelectTool={setActiveTool} />
-            )}
-            {sheet === 'options' && <ToolOptions activeTool={activeTool} />}
-            {sheet === 'layers' && (
-              <LayersPanel
-                layers={layers}
-                onToggleVisibility={toggleLayerVisibility}
-                onSelect={selectLayer}
-              />
-            )}
-          </div>
-        </div>
+        <MobileSheet
+          title={
+            sheet === 'toolbox'
+              ? 'Toolbox'
+              : sheet === 'options'
+                ? 'Tool Options'
+                : 'Layers'
+          }
+          onClose={() => setSheet(null)}
+        >
+          {sheet === 'toolbox' && (
+            <Toolbox layout="sheet" activeTool={activeTool} onSelectTool={setActiveTool} />
+          )}
+          {sheet === 'options' && <ToolOptions activeTool={activeTool} />}
+          {sheet === 'layers' && (
+            <LayersPanel
+              layers={layers}
+              onToggleVisibility={toggleLayerVisibility}
+              onSelect={selectLayer}
+            />
+          )}
+        </MobileSheet>
       )}
     </div>
   );
