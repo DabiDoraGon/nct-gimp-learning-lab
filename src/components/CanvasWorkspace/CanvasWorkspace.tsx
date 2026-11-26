@@ -4,6 +4,7 @@ import type { ImageState } from '@/types/gimp';
 
 interface CanvasWorkspaceProps {
   image: ImageState | null;
+  processedImageUrl?: string | null;
   zoom: number;
   onZoomChange: (z: number) => void;
   onOpenImage: (file: File) => void;
@@ -17,6 +18,7 @@ const ZOOM_STEP = 1.25;
 
 export function CanvasWorkspace({
   image,
+  processedImageUrl,
   zoom,
   onZoomChange,
   onOpenImage,
@@ -100,7 +102,7 @@ export function CanvasWorkspace({
           </div>
         ) : (
           <img
-            src={image.url}
+            src={processedImageUrl ?? image.url}
             alt={image.fileName}
             className="max-h-full max-w-full select-none object-contain"
             style={{
