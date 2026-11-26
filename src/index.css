@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---- Theme variables: dark (GIMP-like, default) ---- */
+:root,
+:root.dark {
+  --gimp-surface-0: #1e1e1e; /* window background */
+  --gimp-surface-1: #262626; /* panel background */
+  --gimp-surface-2: #303030; /* raised cards / inputs */
+  --gimp-surface-3: #3a3a3a; /* hover / pressed */
+  --gimp-line: #4a4a4a;
+  --gimp-ink: #e6e6e6;
+  --gimp-ink-muted: #a8a8a8;
+  --gimp-ink-faint: #787878;
+  --gimp-accent: #d0982a; /* GIMP-ish amber */
+  --gimp-accent-soft: rgba(208, 152, 42, 0.16);
+  --gimp-accent-ink: #1e1e1e;
+  --gimp-ok: #6fbf73;
+  --gimp-warn: #d9a441;
+  --gimp-err: #d4604f;
+  color-scheme: dark;
+}
+
+/* ---- Theme variables: light ---- */
+:root:not(.dark) {
+  --gimp-surface-0: #e9e9e7;
+  --gimp-surface-1: #f4f4f2;
+  --gimp-surface-2: #ffffff;
+  --gimp-surface-3: #e0e0dd;
+  --gimp-line: #c2c2be;
+  --gimp-ink: #232323;
+  --gimp-ink-muted: #5a5a5a;
+  --gimp-ink-faint: #8f8f8f;
+  --gimp-accent: #a97713;
+  --gimp-accent-soft: rgba(169, 119, 19, 0.14);
+  --gimp-accent-ink: #ffffff;
+  --gimp-ok: #3c8f43;
+  --gimp-warn: #9a6d1a;
+  --gimp-err: #b23c2e;
+  color-scheme: light;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--gimp-surface-0);
+  color: var(--gimp-ink);
+  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  overscroll-behavior: none;
+}
+
+/* Prevent horizontal page scroll on mobile */
+html,
+body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+@layer utilities {
+  .gimp-panel {
+    background: var(--gimp-surface-1);
+    border-color: var(--gimp-line);
+  }
+  .gimp-inset {
+    background: var(--gimp-surface-0);
+    border-color: var(--gimp-line);
+  }
+}

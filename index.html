@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="description" content="NCT GIMP Learning Lab — mô phỏng giáo dục giao diện GIMP cho Trường THPT Nguyễn Công Trứ. Không phải phần mềm GIMP chính thức." />
+    <title>NCT GIMP Learning Lab — Prototype 01</title>
+    <script>
+      // Apply saved theme before first paint (dark is the GIMP-like default)
+      (function () {
+        try {
+          var t = localStorage.getItem('nct-gimp-lab-theme');
+          if (t === 'light') document.documentElement.classList.remove('dark');
+          else document.documentElement.classList.add('dark');
+        } catch (e) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
+    <meta property="og:image" content="https://bolt.new/static/og_default.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://bolt.new/static/og_default.png">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
