@@ -1,4 +1,6 @@
+
 import { useCallback, useRef, useState } from 'react';
+
 import { MenuBar } from '@/components/MenuBar/MenuBar';
 import { Toolbox } from '@/components/Toolbox/Toolbox';
 import { CanvasWorkspace } from '@/components/CanvasWorkspace/CanvasWorkspace';
@@ -6,17 +8,23 @@ import { ToolOptions } from '@/components/ToolOptions/ToolOptions';
 import { LayersPanel } from '@/components/LayersPanel/LayersPanel';
 import { MobileSheet } from '@/components/shared/MobileSheet';
 import { ToolIcon } from '@/components/shared/ToolIcon';
+
 import { useTheme } from '@/hooks/useTheme';
 import { useWorkspace } from '@/hooks/useWorkspace';
 import { useIsDesktop } from '@/hooks/useUi';
+
 import { TOOLS } from '@/stores/workspaceData';
-import { ColorBalanceMission } from '@/components/ColorBalanceMission/ColorBalanceMission';
 import type { ToolId } from '@/types/gimp';
+
+import { ColorBalanceMission } from '@/components/ColorBalanceMission/ColorBalanceMission';
+import { HueSaturationMission } from '@/components/HueSaturationMission/HueSaturationMission';
+import { FreeSelectMission } from '@/components/FreeSelectMission/FreeSelectMission';
 
 type SheetId = 'toolbox' | 'options' | 'layers' | null;
 
 export default function App() {
   const { theme, toggleTheme } = useTheme();
+
   const {
     activeTool,
     setActiveTool,
@@ -32,29 +40,69 @@ export default function App() {
     setBrightness,
     setContrast,
     resetBrightnessContrast,
-} = useWorkspace();
+  } = useWorkspace();
+
   const isDesktop = useIsDesktop();
+
   const [sheet, setSheet] = useState<SheetId>(null);
-  const [isColorBalanceMissionOpen, setIsColorBalanceMissionOpen] = useState(false);
+
+  // Mini-game Color Balance
+  const [
+    isColorBalanceMissionOpen,
+    setIsColorBalanceMissionOpen,
+  ] = useState(false);
+
+  // Mini-game Hue-Saturation
+  const [
+    isHueSaturationMissionOpen,
+    setIsHueSaturationMissionOpen,
+  ] = useState(false);
+
+  // Mini-game Free Select
+  const [
+    isFreeSelectMissionOpen,
+    setIsFreeSelectMissionOpen,
+  ] = useState(false);
+
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const activeToolDef = TOOLS.find((t) => t.id === activeTool);
+
+  // Mở hộp thoại chọn ảnh
   const handleOpenFileDialog = useCallback(() => {
     fileInputRef.current?.click();
   }, []);
-  const handleSelectTool = useCallback((tool: ToolId) => {
-  setActiveTool(tool);
 
-  if (tool === 'color-balance') {
-    setIsColorBalanceMissionOpen(true);
-  }
-}, [setActiveTool]);
+  // Xử lý khi học sinh chọn công cụ
+  const handleSelectTool = useCallback(
+    (tool: ToolId) => {
+      setActiveTool(tool);
+
+      // Mở mini-game Color Balance
+      if (tool === 'color-balance') {
+        setIsColorBalanceMissionOpen(true);
+      }
+
+      // Mở mini-game Hue-Saturation
+      if (tool === 'hue-saturation') {
+        setIsHueSaturationMissionOpen(true);
+      }
+
+      // Mở mini-game Free Select
+      if (tool === 'free-select') {
+        setIsFreeSelectMissionOpen(true);
+      }
+    },
+    [setActiveTool]
+  );
 
   const toggleSheet = (id: Exclude<SheetId, null>) =>
     setSheet((s) => (s === id ? null : id));
 
   return (
     <div className="flex h-full flex-col overflow-hidden bg-surface-0 text-ink-base">
+
+      {/* MENU BAR */}
       <MenuBar
         theme={theme}
         onToggleTheme={toggleTheme}
@@ -62,14 +110,21 @@ export default function App() {
         hasImage={!!image}
       />
 
-      {/* Desktop: fixed three-region layout */}
+      {/* MAIN WORKSPACE */}
       <div className="flex min-h-0 flex-1">
+
+        {/* DESKTOP TOOLBOX */}
         {isDesktop && (
           <aside className="w-64 shrink-0 border-r border-line gimp-panel">
-            <Toolbox layout="sidebar" activeTool={activeTool} onSelectTool={handleSelectTool} />
+            <Toolbox
+              layout="sidebar"
+              activeTool={activeTool}
+              onSelectTool={handleSelectTool}
+            />
           </aside>
         )}
 
+        {/* CANVAS */}
         <main className="flex min-w-0 flex-1 flex-col">
           <CanvasWorkspace
             image={image}
@@ -82,8 +137,10 @@ export default function App() {
           />
         </main>
 
+        {/* DESKTOP RIGHT PANEL */}
         {isDesktop && (
           <div className="flex w-72 shrink-0 flex-col border-l border-line gimp-panel">
+
             <div className="max-h-[45%] shrink-0 overflow-y-auto border-b border-line">
               <ToolOptions
                 activeTool={activeTool}
@@ -94,6 +151,7 @@ export default function App() {
                 onResetBrightnessContrast={resetBrightnessContrast}
               />
             </div>
+
             <div className="min-h-0 flex-1">
               <LayersPanel
                 layers={layers}
@@ -101,11 +159,12 @@ export default function App() {
                 onSelect={selectLayer}
               />
             </div>
+
           </div>
         )}
       </div>
 
-      {/* Mobile bottom action bar */}
+      {/* MOBILE BOTTOM ACTION BAR */}
       {!isDesktop && (
         <nav className="safe-nav flex items-stretch border-t border-line bg-surface-1">
           {(
@@ -120,7 +179,9 @@ export default function App() {
               type="button"
               onClick={() => toggleSheet(id)}
               className={`flex flex-1 flex-col items-center justify-center gap-0.5 py-2.5 text-[11px] transition-colors ${
-                sheet === id ? 'bg-surface-3 text-ink-base' : 'text-ink-muted hover:bg-surface-2'
+                sheet === id
+                  ? 'bg-surface-3 text-ink-base'
+                  : 'text-ink-muted hover:bg-surface-2'
               }`}
               aria-expanded={sheet === id}
             >
@@ -131,7 +192,7 @@ export default function App() {
         </nav>
       )}
 
-      {/* Mobile sliding sheet */}
+      {/* MOBILE SLIDING SHEET */}
       {!isDesktop && sheet && (
         <MobileSheet
           title={
@@ -143,9 +204,15 @@ export default function App() {
           }
           onClose={() => setSheet(null)}
         >
+
           {sheet === 'toolbox' && (
-            <Toolbox layout="sheet" activeTool={activeTool} onSelectTool={setActiveTool} />
+            <Toolbox
+              layout="sheet"
+              activeTool={activeTool}
+              onSelectTool={handleSelectTool}
+            />
           )}
+
           {sheet === 'options' && (
             <ToolOptions
               activeTool={activeTool}
@@ -153,9 +220,10 @@ export default function App() {
               contrast={brightnessContrast.contrast}
               onBrightnessChange={setBrightness}
               onContrastChange={setContrast}
-              onResetBrightnessContrast={resetBrightnessContrast} 
+              onResetBrightnessContrast={resetBrightnessContrast}
             />
-)}
+          )}
+
           {sheet === 'layers' && (
             <LayersPanel
               layers={layers}
@@ -163,13 +231,31 @@ export default function App() {
               onSelect={selectLayer}
             />
           )}
+
         </MobileSheet>
       )}
-            {isColorBalanceMissionOpen && (
+
+      {/* COLOR BALANCE MISSION */}
+      {isColorBalanceMissionOpen && (
         <ColorBalanceMission
           onClose={() => setIsColorBalanceMissionOpen(false)}
         />
       )}
+
+      {/* HUE-SATURATION MISSION */}
+      {isHueSaturationMissionOpen && (
+        <HueSaturationMission
+          onClose={() => setIsHueSaturationMissionOpen(false)}
+        />
+      )}
+
+      {/* FREE SELECT MISSION */}
+      {isFreeSelectMissionOpen && (
+        <FreeSelectMission
+          onClose={() => setIsFreeSelectMissionOpen(false)}
+        />
+      )}
+
     </div>
   );
 }

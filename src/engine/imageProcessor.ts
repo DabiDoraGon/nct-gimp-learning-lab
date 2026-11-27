@@ -78,8 +78,14 @@ export function applyBrightnessContrast(
   const contrast = normalizeSlider(settings.contrast);
 
   // Contrast factor based on the standard contrast formula.
-  const contrastFactor =
-    (259 * (contrast + 255)) / (255 * (259 - contrast));
+  const effectiveContrast = Math.max(
+  -150,
+  Math.min(150, contrast * 1.5)
+);
+
+const contrastFactor =
+  (259 * (effectiveContrast + 255)) /
+  (255 * (259 - effectiveContrast));
 
   const brightnessOffset = (brightness / 100) * 255;
 
